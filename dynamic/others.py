@@ -55,3 +55,26 @@ def floor_work2(x):
   print(dp[x])
 
 floor_work2(3)
+
+
+print('########min_money')
+n = 3
+money = [2, 3, 5]
+m = 7
+def min_money(n, m):
+  d = [10001] * (m+1)
+
+  d[0] = 0  # 0원을 만들 수 있는 화폐 갯수 0
+
+  for i in money: # 화폐 단위 (2, 3, 5)
+    for j in range(i, m + 1): # 가장 낮은 화폐 단위부터 만들어야할 화폐 m 까지
+      if d[j-i] != 10001: # 해당 값을 만들기 전 (eg. 2원을 만들기 위해선 2원을 뺀 0원을 만들 수 있어야함. 0원은 0개이므로)
+        d[j] = min(d[j], d[j-i] + 1)
+
+
+  if d[m] == 10001:
+    print(-1)
+
+  return print(d[m])
+
+min_money(n, m)
