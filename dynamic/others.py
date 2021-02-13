@@ -11,7 +11,6 @@ def make_one(x):
       dp[i] = min(dp[i], dp[i // 3] + 1)
     if i % 5 == 0:
       dp[i] = min(dp[i], dp[i // 5] + 1)
-  print("dp : ", dp)
   return dp[x]
 
 print(make_one(x))
@@ -29,3 +28,30 @@ def ant(data):
   
   return dp[3]
 print(ant(ant_data))
+
+
+# 바닥 공사
+def floor_work(x):
+  dp = [0] * 100
+  dp[1] = 1
+  dp[2] = 3
+
+  for i in range(3, x + 1):
+    dp[i] = (dp[i-1] + dp[i-2] * 2) % 796796
+  
+  print(dp[x])
+
+floor_work(3)
+
+
+def floor_work2(x):
+  dp = [0] * 100
+  dp[1] = 2
+  dp[2] = 5
+
+  for i in range(3, x + 1):
+    dp[i] = (dp[i-1]*2 + dp[i-2] * 5) % 796796
+  
+  print(dp[x])
+
+floor_work2(3)
