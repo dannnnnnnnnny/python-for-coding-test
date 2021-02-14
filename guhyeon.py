@@ -149,125 +149,130 @@
 # # 정답 출력
 # print(count)
 
+#----------------------------------------------------------------------------
+# 럭키스트레이트
+# 123402 => 반 나눠서 왼합, 오합이 같으면 LUCKY, 아니면 READY
+print('럭키 스트레이트')
+
+def lucky(data):
+    answer = 'READY'
+    n = int(len(data)/2)
+
+    if sum(list(map(int, list(data[:n])))) == sum(list(map(int, list(data[n:])))):
+        return 'LUCKY'
+
+    return answer 
+
+print(lucky('123402'))
 
 
-#----------------------------------------------------------------------------------------------------
-# 모험가 길드
-# N명의 모험가, 공포도가 각각 존재
-# 공포도가 X인 모험가는 반드시 X명 이상으로 구성한 모험가 그룹에 참여해야 함
-print("모험가 길드")
-n = 5
-data = [2, 3, 1, 2, 2]
-
-def solution(n, data):
-    arr = [[] for _ in range(len(data)+1)]
-    answer = 0
+# 문자열 재정렬
+print('문자열 재정렬')
+data = 'AJKDLSI412K4JSJ9D'
+def solution(data):
+    num = 0
+    idx = 0
+    data = list(data)
     data.sort()
-    
-    for i in range(len(data), 0, -1):
-        arr[data[i-1]].append(data[i-1])
+    print(data)
 
-    arr = [i for i in arr if len(i) != 0]
-
-    for i in arr:
-        if i[0] <= len(i):
-            answer += 1
-    return answer
-
-print(solution(n, data))
-
-
-def g(n, data):
-    res = 0
-    cnt = 0
-
-    for i in data:
-        cnt += 1
-        if cnt >= i:
-            res += 1
-            cnt = 0
-
-    print(res)
-
-g(n, data)
-
-print('곱하기 혹은 더하기')
-num = "02984"
-def multi_add(num):
-    answer = int(num[0])
-
-    for i in range(1, len(num)):
-        n = int(num[i])
-        if n <= 1 or answer <= 1:
-            answer += n
+    for i in range(len(data)):
+        if data[i].isdigit():
+            num += int(data[i])
         else:
-            answer *= n
-    print(answer)
-    return 0;
+            idx = i
+            break
+    data = data[idx:] + [str(num)]
+    print(''.join(data)) 
+solution(data)
 
-multi_add(num)
+# 문자열 압축
+'''
+2020 카카오공채에 출제되었던 문제이다. 
+먼저 문자열을 몇개 단위로 짜를지에 대해 step을 이용하는 제일 바깥 for문을 1, len(s) // 2 + 1까지 반복했다. 
+문자열을 꼭 2로 나누어 문자열 길이보다 더 넘어가는 비교는 할 필요 없도록 한다. 
+그리고 tempStr에 step만큼 짤라낸 문자열을 대입해 다음 문자열들과 step 단위로 비교한다.
+(s[i:i+step]) 같으면 count를 +1 해주고, 틀리면 count와 비교했던 tempStr을 result값에 넣어주면 된다. 
+그리고 중요한 것이 마지막에 한번 더 result에 count + tempStr을 넣어줘야 제일 마지막으로 비교했던 문자열이 들어갈 수 있다.
+'''
+print("문자열 압축")
+data = 'aabbaccc'
 
-print('문자열 뒤집기')
-str = "00011000"
-def string_reverse(str):
-    cnt0 = 0
-    cnt1 = 0
+def solution2(s):
+    answer = 1000000
+    for step in range(1, len(s) // 2 + 1):
+        res = ''
+        cnt = 1
+        tmp = s[:step]
 
-    if str[0] == '1':
-        cnt0 += 1
-    else:
-        cnt1 += 1
-    
-    for i in range(len(str) - 1):
-        if str[i] != str[i+1]:
-            if str[i+1] == '1':
-                cnt0 += 1
+        for i in range(step, len(s) + step, step):
+            print('step : ', step, end=' ')
+            print('i : ', i, end=' ')
+            print('s[', i, ':', i, '+', step, '] = ', s[i:i+step], end=' ')
+            print('tmp : ', tmp, end=' ') 
+            print('cnt : ', cnt, end=' ')
+            print('res : ', res)
+            if tmp == s[i : i + step]:
+                cnt += 1
+
             else:
-                cnt1 += 1
-        
-    print(cnt0, cnt1)
-string_reverse(str)
+                if cnt == 1:
+                    res += tmp
+                else:
+                    res = res + str(cnt) + tmp
+                
+                tmp = s[i : i + step]
+                cnt = 1
 
+        answer = min(answer, len(res))
+    
+    return answer
+print(solution2(data))    
 
-print('만들 수 없는 금액')
-data = [3, 2, 1, 1, 9]
-data.sort()
+print('치킨 배달')
+from itertools import combinations
+
 n = 5
+m = 3
+data = [
+    [0, 0, 1, 0, 0],
+    [0, 0, 2, 0, 1],
+    [0, 1, 2, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 2]
+]
 
-target = 1
+def solution3(n, m, data):
+    chicken = []
+    house = []
 
-for x in data:
-    if target < x:
-        break
-    target += x
-    print("d : ", target)
+    for r in range(len(data)):
+        for c in range(n):
+            if data[r][c] == 1:
+                house.append((r, c))
+            elif data[r][c] == 2:
+                chicken.append((r, c))
+    
+    print(house)
+    print(chicken)
+    candidates = list(combinations(chicken, m))
+    print("candi : ", candidates)
+    def get_sum(candidate):
+        result = 0
 
-print(target)
+        for hx, hy in house:
+            temp = 1e9
+            for cx, cy in candidate:
+                temp = min(temp, abs(hx - cx) + abs(hy - cy))
+            
+            result += temp
+        
+        return result
+    
+    result = 1e9
+    for candidate in candidates:
+        result = min(result, get_sum(candidate))
+    
+    print(result)
 
-
-print('볼링공 고르기')
-n = 8
-m = 5
-data = [1, 5, 4, 3, 2, 4, 5, 2]
-answer = []
-
-for i in range(len(data)):
-    for j in range(i+1, len(data)):
-        if data[i] != data[j]:
-            answer.append((i+1, j+1))
-
-print(len(answer))
-
-
-print('무지 먹방 라이브')
-import heapq
-
-n = 3
-k = 15
-data = [8, 6, 4]
-
-q = []
-for i in range(len(data)):
-    heapq.heappush(q, (data[i], i+1))
-
-print(q)
+solution3(n, m, data)
